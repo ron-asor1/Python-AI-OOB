@@ -1,0 +1,7 @@
+2025-07-21 20:26:03,561 - INFO - [root] - Logging configured. Logs will be saved to: data/logs\app_2025-07-21_20-26-03.log
+2025-07-21 20:26:03,563 - INFO - [__main__] - Starting site validation process...
+2025-07-21 20:26:03,563 - INFO - [__main__] - BROWSER_USE_HEADLESS set to: 0 (0=headed, 1=headless)
+2025-07-21 20:26:03,563 - INFO - [__main__] - BROWSER_USE_TELEMETRY_ENABLED set to: 1
+2025-07-21 20:26:03,599 - INFO - [src.agent_core.llm_setup] - Google Generative AI LLM initialized.
+2025-07-21 20:26:03,600 - INFO - [__main__] - LLM initialized successfully for agent.
+2025-07-21 20:26:03,618 - INFO - [__main__] - BrowserUse Agent initialized.

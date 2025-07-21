@@ -1,0 +1,25 @@
+[project]
+name = "PythonProject"
+version = "0.1.0"
+description = "A versatile AI automation agent for web validation"
+readme = "README.md"
+requires-python = ">=3.9" # Match your Python version
+dependencies = [
+    # List your direct dependencies here for clarity, though requirements.txt is still common for installation
+    # e.g., "python-dotenv", "browser-use", "langchain-google-genai", "pydantic"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ron-asor1/Python-AI-OOB"
+"Bug Tracker" = "https://github.com/ron-asor1/Python-AI-OOB/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"] # Needed for editable installs etc.
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"] # Tell setuptools to look for packages in the 'src' directory
+
+[tool.pytest.ini_options]
+pythonpath = ["src"] # Allow pytest to find modules in 'src'
+testpaths = ["tests"]

@@ -18,7 +18,7 @@ async def run_site_validation() -> None:
         raise ValueError("GOOGLE_API_KEY environment variable not set. "
                          "Please set it in your .env file.")
 
-    os.environ["BROWSER_USE_HEADLESS"] = "0" # Show browser window
+    os.environ["BROWSER_USE_HEADLESS"] = "1" # Show browser window
     os.environ["BROWSER_USE_TELEMETRY_ENABLED"] = "0"
 
     validation_task = (

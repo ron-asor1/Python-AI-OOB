@@ -3,15 +3,15 @@ name: Run AgentAI Validation
 on:
   push:
     branches:
-      - main # Run on pushes to the main branch
+      - main
   pull_request:
     branches:
-      - main # Run on pull requests targeting the main branch
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-run:
-    runs-on: ubuntu-latest # Use a fresh Ubuntu runner
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -20,7 +20,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.x' # Use the latest Python 3 version
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |

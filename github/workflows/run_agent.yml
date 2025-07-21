@@ -1,0 +1,40 @@
+name: Run AgentAI Validation
+
+on:
+  push:
+    branches:
+      - main # Run on pushes to the main branch
+  pull_request:
+    branches:
+      - main # Run on pull requests targeting the main branch
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest # Use a fresh Ubuntu runner
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x' # Use the latest Python 3 version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt # Assumes you have a requirements.txt
+        playwright install              # Install Playwright browsers
+
+    - name: Run AgentAI Script
+      env:
+        # Set the GOOGLE_API_KEY from GitHub Secrets as an environment variable
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        # Optionally, run headless in CI/CD environments
+        BROWSER_USE_HEADLESS: 1
+        # Optionally, disable telemetry in CI/CD environments
+        BROWSER_USE_TELEMETRY_ENABLED: 0
+      run: |
+        python agentAI.py

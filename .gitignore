@@ -3,5 +3,6 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-.DS_Store # macOS specific
+.DS_Store
 data/logs/ # To prevent pushing logs
+.ipynb_checkpoints/ # If using Jupyter notebooks

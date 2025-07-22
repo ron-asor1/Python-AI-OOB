@@ -1,4 +1,4 @@
-name: Run AgentAI Validation
+name: CI/CD Workflow
 
 on:
   push:
@@ -8,9 +8,25 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Select which test suite to run'
+        required: true
+        default: 'all' # Default to running all tests
+        type: choice
+        options:
+          - all           # Option to run all tests
+          - unit_tests    # Option to run only unit tests
+          - integration_tests # Option to run only integration tests
+          - agent_run     # Option to run the main agent script (not a test)
+      run_headless:
+        description: 'Run browser in headless mode?'
+        required: true
+        default: 'true'
+        type: boolean
 
 jobs:
-  build-and-run:
+  build-test-and-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,20 +36,41 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.12' # Keep this at a specific version, e.g., '3.12' or '3.11'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install -e .
+        pip install pytest pytest-asyncio # Add any other test-specific packages
         pip install -r requirements.txt
-        playwright install
+        playwright install --with-deps
 
-    - name: Run AgentAI Script
+    # --- Conditional Test Execution based on workflow_dispatch input ---
+    - name: Run Tests (Conditional)
+      # Only run this step if test_suite input is 'all', 'unit_tests', or 'integration_tests'
+      if: github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'unit_tests' || github.event.inputs.test_suite == 'integration_tests'
       env:
         GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        BROWSER_USE_HEADLESS: 1
+        BROWSER_USE_HEADLESS: ${{ github.event.inputs.run_headless }} # Use input for headless
         BROWSER_USE_TELEMETRY_ENABLED: 0
       run: |
-        # --- THIS IS THE CRUCIAL CHANGE ---
-        python -m src.agent_core.agent_runner
-        # ----------------------------------
+        # Determine which tests to run based on input
+        if [[ "${{ github.event.inputs.test_suite }}" == "unit_tests" ]]; then
+          pytest tests/unit/
+        elif [[ "${{ github.event.inputs.test_suite }}" == "integration_tests" ]]; then
+          pytest tests/integration/
+        else # Default or 'all'
+          pytest tests/
+        fi
+
+    - name: Run AgentAI Script (Application Entry Point)
+      # Only run this step if test_suite input is 'agent_run'
+      if: github.event.inputs.test_suite == 'agent_run'
+      env:
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        BROWSER_USE_HEADLESS: ${{ github.event.inputs.run_headless }} # Use input for headless
+        BROWSER_USE_TELEMETRY_ENABLED: 0
+      run: |
+        # Run the main application entry point (e.g., run.py)
+        python run.py # Or: python -m src.agent_core.agent_runner
